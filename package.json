@@ -11,5 +11,8 @@
   "license": "MIT",
   "devDependencies": {
     "firebase-tools": "^13.8.0"
-  }
+  },
+  "workspaces": [
+    "frontend"
+  ]
 }

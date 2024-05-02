@@ -31,5 +31,8 @@
       "enabled": true
     },
     "singleProjectMode": true
+  },
+  "extensions": {
+    "firestore-multimodal-genai": "googlecloud/firestore-multimodal-genai@1.0.0"
   }
 }

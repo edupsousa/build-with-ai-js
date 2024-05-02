@@ -8,5 +8,8 @@
   },
   "keywords": [],
   "author": "Eduardo P de Sousa <edupsousa@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "firebase-tools": "^13.8.0"
+  }
 }

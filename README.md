@@ -7,7 +7,7 @@ This is a sample project for the Build With AI Workshop. It is a simple React ap
 
 You can use the application at [https://build-with-ai-js.web.app/](https://build-with-ai-js.web.app/).
 
-To use it you first need to create an API key by going to (https://aistudio.google.com/app/apikey)[https://aistudio.google.com/app/apikey] and then click on the "Create API Key" button. Copy the key and paste it in the screen that appears when you open the application.
+To use it you first need to create an API key by going to [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) and then click on the "Create API Key" button. Copy the key and paste it in the screen that appears when you open the application.
 
 ## Running Locally / Contributing
 

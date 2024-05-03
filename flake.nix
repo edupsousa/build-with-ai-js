@@ -18,7 +18,10 @@
     {
       devShells = forEachSupportedSystem ({ pkgs }: {
         default = pkgs.mkShell {
-          packages = with pkgs; [ nodejs ];
+          packages = with pkgs; [ 
+            nodejs
+            jdk21_headless
+          ];
         };
       });
     };

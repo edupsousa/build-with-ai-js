@@ -1,10 +1,6 @@
 {
-  "firestore": {
-    "rules": "config/firestore.rules",
-    "indexes": "config/firestore.indexes.json"
-  },
   "hosting": {
-    "public": "frontend/dist",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -16,23 +12,5 @@
         "destination": "/index.html"
       }
     ]
-  },
-  "emulators": {
-    "auth": {
-      "port": 9099
-    },
-    "functions": {
-      "port": 5001
-    },
-    "firestore": {
-      "port": 8080
-    },
-    "ui": {
-      "enabled": true
-    },
-    "singleProjectMode": true
-  },
-  "extensions": {
-    "firestore-multimodal-genai": "googlecloud/firestore-multimodal-genai@1.0.0"
   }
 }

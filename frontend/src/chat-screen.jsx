@@ -2,8 +2,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Navbar from "react-bootstrap/Navbar";
-import { auth } from "./firebase";
-
+import PropTypes from "prop-types";
 
 function Message() {
   return (
@@ -18,9 +17,8 @@ function Message() {
   );
 }
 
-function ChatScreen() {
-  const {displayName} = auth.currentUser;
-
+function ChatScreen({apiKey, updateApiKey}) {
+  
   return (
     <div className="h-100 d-flex flex-column">
       <Navbar>
@@ -29,8 +27,8 @@ function ChatScreen() {
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
-              Usuário: <span>{displayName}</span>
-              <Button variant="link">Sair</Button>
+              API Key: <span>{apiKey}</span>
+              <Button variant="link" onClick={() => updateApiKey('')}>Sair</Button>
             </Navbar.Text>
           </Navbar.Collapse>
         </Container>
@@ -62,5 +60,10 @@ function ChatScreen() {
     </div>
   );
 }
+
+ChatScreen.propTypes = {
+  apiKey: PropTypes.string.isRequired,
+  updateApiKey: PropTypes.func.isRequired,
+};
 
 export default ChatScreen;

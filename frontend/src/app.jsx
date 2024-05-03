@@ -1,26 +1,15 @@
-import { auth } from "./firebase";
-import SignInScreen from "./signin-screen";
+import { useCallback, useState } from "react";
 import ChatScreen from "./chat-screen";
-import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-
-function useAuthState() {
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, setUser);
-    return unsubscribe;
-  }, [setUser]);
-  return user;
-}
+import SignInScreen from "./signin-screen";
 
 function App() {
-  const user = useAuthState();
+  const [apiKey, setApiKey] = useState('');
+  const updateApiKey = useCallback((newApiKey) => {
+    setApiKey(newApiKey);
+  }, []);
+  const hasKey = apiKey.length !== 0;
 
-  return (
-    <>
-      {user ? <ChatScreen /> : <SignInScreen />}
-    </>
-  );
+  return <>{hasKey ? <ChatScreen apiKey={apiKey} updateApiKey={updateApiKey}  /> : <SignInScreen updateApiKey={updateApiKey} />}</>;
 }
 
 export default App;

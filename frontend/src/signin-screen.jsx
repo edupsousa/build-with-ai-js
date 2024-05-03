@@ -9,9 +9,7 @@ function SignInScreen({updateApiKey}) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const apiKey = formData.get('apiKey').trim();
-    if (apiKey.length === 0) {
-      // display error
-    } else {
+    if (apiKey.length) {
       updateApiKey(apiKey);
     }
   }
@@ -21,7 +19,7 @@ function SignInScreen({updateApiKey}) {
       <Form style={{maxWidth: '600px'}} onSubmit={storeApiKey}>
         <Form.Group className="mb-3">
           <Form.Label>Chave de API do Google AI</Form.Label>
-          <Form.Control name="apiKey" type="text" placeholder="Informe sua chave..." />
+          <Form.Control name="apiKey" type="text" placeholder="Informe sua chave..." autoComplete="off" />
           <Form.Text>
             <small>
             Sua chave de API será usada para realizar requisições à API do GeminiAI. 

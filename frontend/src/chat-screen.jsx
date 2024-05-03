@@ -1,12 +1,13 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { nanoid } from "nanoid";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Navbar from "react-bootstrap/Navbar";
+import Spinner from "react-bootstrap/Spinner";
 
 function ChatNavBar({ apiKey, onLogout }) {
   const keyExcerpt = `...${apiKey.slice(-4)}`;
@@ -34,13 +35,17 @@ ChatNavBar.propTypes = {
   onLogout: PropTypes.func.isRequired,
 };
 
-function Message({ fromUser, text }) {
+function Message({ fromUser, text, isLoading, isError }) {
   return (
     <div className={`px-3 py-2 rounded-bottom-4 ${fromUser ? 'align-self-end bg-body-secondary rounded-start-4' : 'align-self-start bg-dark-subtle rounded-end-4'}`}>
       <div>
         <strong>{fromUser ? "Você" : "Gemini"}</strong>
+        {isLoading && <Spinner animation="border" size="sm" className="ms-2" />}
       </div>
-      <div>{text}</div>
+      {isError 
+        ? <div className="text-danger">Erro ao gerar resposta</div>
+        : <div>{text}</div>
+      }
     </div>
   );
 }
@@ -48,11 +53,19 @@ function Message({ fromUser, text }) {
 Message.propTypes = {
   fromUser: PropTypes.bool.isRequired,
   text: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool,
+  isError: PropTypes.bool,
 };
 
 function MessageList({ messages }) {
+  const listElementRef = useRef(null);  
+
+  useLayoutEffect(() => {
+    listElementRef.current.scrollTop = listElementRef.current.scrollHeight;
+  }, [messages]);
+
   return (
-    <Container className="flex-grow-1 overflow-y-scroll">
+    <Container ref={listElementRef} className="flex-grow-1 overflow-y-scroll">
       <div className="mh-100 d-flex flex-column gap-2">
         {messages.map(({ id, ...message }) => (
           <Message key={id} {...message} />
@@ -68,6 +81,8 @@ MessageList.propTypes = {
       id: PropTypes.string.isRequired,
       fromUser: PropTypes.bool.isRequired,
       text: PropTypes.string.isRequired,
+      isLoading: PropTypes.bool,
+      isError: PropTypes.bool,
     })
   ).isRequired,
 };
@@ -127,29 +142,53 @@ const mockMessages = [
   { id: "8", fromUser: true, text: "Estou testando o Gemini!" },
   { id: "9", fromUser: false, text: "Que legal! Como estou me saindo?" },
   { id: "10", fromUser: true, text: "Você está indo muito bem!" },
-  { id: "11", fromUser: false, text: "Obrigado! Estou aqui para ajudar." },
+  { id: "11", fromUser: false, text: "Obrigado! Estou aqui para ajudar.", isLoading: true },
 ];
 
 function ChatScreen({ apiKey, updateApiKey }) {
-  const [messageList, setMessageList] = useState(mockMessages);
+  const [messageList, setMessageList] = useState(apiKey === '123' ? mockMessages : []);
   const chatSession = useChatSession(apiKey);
 
-  const addToMessageList = useCallback((fromUser, message) => {
+  const addToMessageList = useCallback((fromUser, message, isLoading = false) => {
+    const id = nanoid();
     setMessageList((list) => [
       ...list,
       {
-        id: nanoid(),
+        id,
         fromUser,
         text: message,
+        isLoading,
       },
     ]);
+    return id;
+  }, []);
+
+  const updateMessage = useCallback((id, update) => {
+    setMessageList((list) =>
+      list.map((message) =>
+        message.id === id
+          ? {
+              ...message,
+              ...update,
+            }
+          : message
+      )
+    );
   }, []);
 
   const sendMessage = useCallback(async (message) => {
     addToMessageList(true, message);
-    const { response } = await chatSession.sendMessage(message);
-    addToMessageList(false, response.text());
-  }, [addToMessageList, chatSession]);
+    const promise = chatSession.sendMessage(message);
+    const id = addToMessageList(false, 'Gerando resposta...', true);
+    try {
+      const {response} = await promise;
+      const text = response.text();
+      updateMessage(id, { text, isLoading: false });
+    } catch (e) {
+      console.log(e);
+      updateMessage(id, { isLoading: false, isError: true });
+    }
+  }, [addToMessageList, chatSession, updateMessage]);
   
   const keyExcerpt = `...${apiKey.slice(-4)}`;
 

@@ -24,3 +24,7 @@ The local development server will start and you can access the application at [h
 
 To deploy the application to Firebase, you need to create a Firebase project and then use the Firebase CLI
 to login and configure the project by following the instructions at [https://firebase.google.com/docs/cli](https://firebase.google.com/docs/cli) and [https://firebase.google.com/docs/hosting/quickstart](https://firebase.google.com/docs/hosting/quickstart).
+
+## Author
+
+[Eduardo P de Sousa](https://www.linkedin.com/in/edupsousa/)

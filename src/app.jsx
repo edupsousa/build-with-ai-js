@@ -3,8 +3,9 @@ import ChatScreen from "./chat-screen";
 import SignInScreen from "./signin-screen";
 
 function App() {
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState(sessionStorage.getItem("apiKey") || "");
   const updateApiKey = useCallback((newApiKey) => {
+    sessionStorage.setItem("apiKey", newApiKey);
     setApiKey(newApiKey);
   }, []);
   const hasKey = apiKey.length !== 0;
